@@ -1,0 +1,42 @@
+name: Build Admin APK
+on:
+  push:
+    branches: [ main, master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Expo
+        uses: expo/expo-github-action@v8
+        with:
+          expo-version: latest
+          eas-version: latest
+          packager: npm
+          token: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Install dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Build APK (Local mode on Action)
+        run: npx eas-cli build --platform android --profile preview --local --non-interactive
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: admin-apk
+          path: ./*.apk

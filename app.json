@@ -1,0 +1,32 @@
+{
+  "expo": {
+    "name": "Taksim Admin",
+    "slug": "taksim_admin",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "predictiveBackGestureEnabled": false,
+      "package": "com.ozgurciytak.taksimadmin"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "newArchEnabled": false,
+    "plugins": [
+      "expo-router",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Uygulama üzerinden profil resmi seçebilmek için fotoğraflarınıza erişim izni vermeniz gerekmektedir."
+        }
+      ]
+    ]
+  }
+}
