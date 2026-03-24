@@ -101,7 +101,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const settingsRes = await fetch(`${currentUrl}/systemSettings`);
       if (settingsRes.ok) {
         const settings = await settingsRes.json();
-        setSystemSettings(settings);
+        // Don't overwrite the backend.apiUrl with whatever the server has if we already have a working URL
+        const fixedSettings = {
+          ...settings,
+          backend: {
+            ...settings.backend,
+            apiUrl: currentUrl // Maintain the URL that actually worked
+          }
+        };
+        setSystemSettings(fixedSettings);
       }
 
       // 4. Load Payments from API
