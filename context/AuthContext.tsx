@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Modal, View, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { Modal, View, Text, StyleSheet, TextInput, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Colors } from '../constants/Colors';
 
@@ -116,6 +116,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSystemSettings(fixedSettings);
       }
 
+      // 4. Load Payments from API
+      const currentUrlP = cachedApiUrl || DEFAULT_API_URL;
+      const paymentsRes = await fetch(`${currentUrlP}/payments?_sort=date&_order=desc`);
+      if (paymentsRes.ok) {
         const data = await paymentsRes.json();
         setPayments(data);
       }

@@ -12,7 +12,7 @@ export default function RootLayout() {
     const applyFullScreen = async () => {
       if (Platform.OS === 'android') {
         await NavigationBar.setVisibilityAsync('hidden');
-        await NavigationBar.setBehaviorAsync('sticky-immersive');
+        await NavigationBar.setBehaviorAsync('inset-touch');
       }
     };
 
