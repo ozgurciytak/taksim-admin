@@ -149,12 +149,6 @@ export default function LoginScreen() {
           </TouchableOpacity>
         </View>
 
-        <View style={styles.footer}>
-          <Text>Hesabınız yok mu? </Text>
-          <TouchableOpacity onPress={() => router.push('/(auth)/register')}>
-            <Text style={styles.registerLink}>Kayıt Ol</Text>
-          </TouchableOpacity>
-        </View>
 
         <TouchableOpacity 
           style={styles.apiConfigToggle} 
@@ -303,15 +297,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     color: 'black',
-  },
-  footer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    marginTop: 40,
-  },
-  registerLink: {
-    color: Colors.primary,
-    fontWeight: 'bold',
   },
   apiConfigToggle: {
     flexDirection: 'row',
