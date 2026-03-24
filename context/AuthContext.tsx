@@ -61,6 +61,8 @@ interface AuthContextType {
   refreshData: () => Promise<void>;
   systemSettings: SystemSettings;
   updateSettings: (settings: SystemSettings) => Promise<void>;
+  allUsers: User[];
+  allPosts: any[];
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -73,6 +75,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [payments, setPayments] = useState<Payment[]>([]);
+  const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [allPosts, setAllPosts] = useState<any[]>([]);
   const [connectionError, setConnectionError] = useState(false);
   const [tempApiUrl, setTempApiUrl] = useState('');
   const [systemSettings, setSystemSettings] = useState<SystemSettings>({ 
@@ -112,12 +116,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setSystemSettings(fixedSettings);
       }
 
-      // 4. Load Payments from API
-      const paymentsRes = await fetch(`${currentUrl}/payments?_sort=date&_order=desc`);
-      if (paymentsRes.ok) {
         const data = await paymentsRes.json();
         setPayments(data);
       }
+
+      // 5. Load All Users & Posts for stats
+      const usersRes = await fetch(`${currentUrl}/users`);
+      if (usersRes.ok) setAllUsers(await usersRes.json());
+
+      const postsRes = await fetch(`${currentUrl}/posts`);
+      if (postsRes.ok) setAllPosts(await postsRes.json());
+
       setConnectionError(false);
     } catch (e) {
       console.error('Initial load failed:', e);
@@ -248,6 +257,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       rejectPayment,
       systemSettings,
       updateSettings,
+      allUsers,
+      allPosts,
       refreshData: loadInitialData
     }}>
       {children}

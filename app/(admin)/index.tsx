@@ -6,8 +6,13 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
 export default function AdminPanelScreen() {
-  const { logout } = useAuth();
+  const { logout, allUsers, allPosts, payments } = useAuth();
   const router = useRouter();
+
+  const totalVehicles = allUsers.filter(u => u.role === 'owner' && u.plateNumber).length;
+  const totalDrivers = allUsers.filter(u => u.role === 'driver').length;
+  const activeAds = allPosts.length;
+  const pendingPayments = payments.filter(p => p.status === 'pending').length;
 
   const StatCard = ({ value, label, icon, color }: any) => (
     <View style={styles.statCard}>
@@ -36,19 +41,19 @@ export default function AdminPanelScreen() {
         {/* Stats Grid */}
         <View style={styles.grid}>
           <View style={styles.row}>
-            <StatCard value="128" label="Toplam Araç" icon="taxi" color={Colors.secondary} />
-            <StatCard value="345" label="Kayıtlı Şoför" icon="account-group" color={Colors.primary} />
+            <StatCard value={totalVehicles.toString()} label="Toplam Araç" icon="taxi" color={Colors.secondary} />
+            <StatCard value={totalDrivers.toString()} label="Kayıtlı Şoför" icon="account-group" color={Colors.primary} />
           </View>
           <View style={styles.row}>
-            <StatCard value="12" label="Aktif İlan" icon="bullhorn" color="green" />
-            <StatCard value="3" label="Şikayetler" icon="alert" color="red" />
+            <StatCard value={activeAds.toString()} label="Aktif İlan" icon="bullhorn" color="green" />
+            <StatCard value={pendingPayments.toString()} label="Bekleyen Ödeme" icon="credit-card-clock" color="orange" />
           </View>
         </View>
 
         <Text style={styles.sectionTitle}>Yönetim İşlemleri</Text>
         <View style={[styles.row, { flexWrap: 'wrap' }]}>
           <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/(admin)/vehicles')}>
-            <MaterialCommunityIcons name="car-search" size={28} color={Colors.secondary} />
+            <MaterialCommunityIcons name="car" size={28} color={Colors.secondary} />
             <Text style={styles.actionButtonText}>Araç Sorgula</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/(admin)/drivers')}>
