@@ -9,10 +9,17 @@ export default function AdminPanelScreen() {
   const { logout, allUsers, allPosts, payments } = useAuth();
   const router = useRouter();
 
-  const totalVehicles = allUsers.filter(u => u.role === 'owner' && u.plateNumber).length;
+  const totalVehicles = allUsers.filter(u => u.role === 'owner').length;
   const totalDrivers = allUsers.filter(u => u.role === 'driver').length;
   const activeAds = allPosts.length;
-  const pendingPayments = payments.filter(p => p.status === 'pending').length;
+  const pendingPayments = (payments || []).filter(p => p.status === 'pending').length;
+  const totalWorking = allUsers.filter(u => u.role === 'driver' && u.currentWorkInfo).length;
+
+  React.useEffect(() => {
+    refreshData();
+    const interval = setInterval(refreshData, 10000); // 10s auto refresh
+    return () => clearInterval(interval);
+  }, []);
 
   const StatCard = ({ value, label, icon, color }: any) => (
     <View style={styles.statCard}>
@@ -45,30 +52,38 @@ export default function AdminPanelScreen() {
             <StatCard value={totalDrivers.toString()} label="Kayıtlı Şoför" icon="account-group" color={Colors.primary} />
           </View>
           <View style={styles.row}>
+            <StatCard value={totalWorking.toString()} label="Çalışan Şoför" icon="briefcase-check" color="#007AFF" />
             <StatCard value={activeAds.toString()} label="Aktif İlan" icon="bullhorn" color="green" />
+          </View>
+          <View style={styles.row}>
             <StatCard value={pendingPayments.toString()} label="Bekleyen Ödeme" icon="credit-card-clock" color="orange" />
+            <View style={[styles.statCard, { opacity: 0 }]} />
           </View>
         </View>
 
         <Text style={styles.sectionTitle}>Yönetim İşlemleri</Text>
-        <View style={[styles.row, { flexWrap: 'wrap' }]}>
-          <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/(admin)/vehicles')}>
+          <View style={[styles.row, { flexWrap: 'wrap' }]}>
+          <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/(admin)/assignments' as any)}>
+            <MaterialCommunityIcons name="briefcase-check" size={28} color={Colors.secondary} />
+            <Text style={styles.actionButtonText}>Çalışan Şoförler</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/(admin)/vehicles' as any)}>
             <MaterialCommunityIcons name="car" size={28} color={Colors.secondary} />
             <Text style={styles.actionButtonText}>Araç Sorgula</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/(admin)/drivers')}>
+          <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/(admin)/drivers' as any)}>
             <MaterialCommunityIcons name="account-search" size={28} color={Colors.secondary} />
             <Text style={styles.actionButtonText}>Şoför Sorgula</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/(admin)/admins')}>
+          <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/(admin)/admins' as any)}>
             <MaterialCommunityIcons name="account-plus" size={28} color={Colors.secondary} />
             <Text style={styles.actionButtonText}>Yönetici Ekle</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/(admin)/payments')}>
+          <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/(admin)/payments' as any)}>
             <MaterialCommunityIcons name="credit-card-check" size={28} color={Colors.secondary} />
             <Text style={styles.actionButtonText}>Ödeme Onayları</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/(admin)/settings')}>
+          <TouchableOpacity style={styles.actionButton} onPress={() => router.push('/(admin)/settings' as any)}>
             <MaterialCommunityIcons name="cog" size={28} color={Colors.secondary} />
             <Text style={styles.actionButtonText}>Sistem Ayarları</Text>
           </TouchableOpacity>
