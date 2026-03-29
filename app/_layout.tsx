@@ -10,9 +10,13 @@ import { useEffect } from 'react';
 export default function RootLayout() {
   useEffect(() => {
     const applyFullScreen = async () => {
-      if (Platform.OS === 'android') {
-        await NavigationBar.setVisibilityAsync('hidden');
-        await NavigationBar.setBehaviorAsync('inset-touch');
+      try {
+        if (Platform.OS === 'android') {
+          await NavigationBar.setVisibilityAsync('hidden');
+          await NavigationBar.setBehaviorAsync('inset-touch');
+        }
+      } catch (error) {
+        console.log('NavigationBar error ignored', error);
       }
     };
 

@@ -6,7 +6,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 
 export default function AdminPanelScreen() {
-  const { logout, allUsers, allPosts, payments } = useAuth();
+  const { logout, allUsers, allPosts, payments, refreshData } = useAuth();
   const router = useRouter();
 
   const totalVehicles = allUsers.filter(u => u.role === 'owner').length;

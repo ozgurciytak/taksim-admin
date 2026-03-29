@@ -15,6 +15,7 @@ interface User {
   rating?: number;
   balance: number;
   password?: string;
+  currentWorkInfo?: any;
 }
 
 interface Payment {
